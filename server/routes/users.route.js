@@ -2,13 +2,14 @@ var express = require("express");
 var router = express.Router();
 
 var usersController = require('../controllers/users.controller');
+let {authenticate} = require('./../middleware/authenticate.middleware');
 
 router
-    .get("/me", usersController.getMe)
+    .get("/me", authenticate ,usersController.getMe)
     .post("/", usersController.addUser)
-    .put('/me', usersController.editUser)
-    .delete('/me', usersController.deleteUser)
+    .put('/me', authenticate, usersController.editUser)
+    .delete('/me', authenticate, usersController.deleteUser)
     .post("/login", usersController.login)
-    .delete('/me/token', usersController.logout)
+    .delete('/me/token', authenticate, usersController.logout)
 
 module.exports = router;

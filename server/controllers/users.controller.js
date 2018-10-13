@@ -4,7 +4,7 @@ var { User } = require("./../models/user");
 
 
 let getMe = (req, res) => {
-  res.send()
+  res.send(req.user);
 };
 
 
@@ -37,13 +37,31 @@ let deleteUser = (req, res) => {
 
 
 let login = (req, res) => {
-  res.send()
+  let body = _.pick(req.body, ["email", "password"]);
+
+  User.findByCredintials(body.email, body.password)
+    .then(user => {
+      return user.generateAuthToken().then(token => {
+        res.header("x-auth", token).send(user);
+      });
+    })
+    .catch(err => {
+      res.status(400).send();
+    });
 };
 
 
 let logout = (req, res) => {
-  res.send()
+  req.user
+    .removeToken(req.token)
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch(err => {
+      res.staus(400).send();
+    });
 };
+
 
 module.exports = {
   getMe,
