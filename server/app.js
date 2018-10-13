@@ -16,6 +16,7 @@ app
     response.header("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT")
     next();
   })
+  .use('/static', express.static(__dirname + '/public'))
   .use(bodyParser.json())
   .use("/api", mainRouter)
   .listen(port, () => {
