@@ -14,11 +14,14 @@ let upload = (req, res) => {
     return res.status(415).send()
   }
 
-  sampleFile.mv(__dirname + '/../public/images/filename.jpg', function(err) {
+  let filename = sampleFile.md5();
+  let ext = sampleFile.mimetype === "image/png" && ".png" || sampleFile.mimetype === "image/jpeg" && ".jpg"
+
+  sampleFile.mv(__dirname + `/../public/images/${filename + ext}`, function(err) {
     if (err)
       return res.status(500).send();
 
-    res.status(200).send();
+    res.status(200).send(filename + ext);
   });
 };
 
