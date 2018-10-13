@@ -27,12 +27,24 @@ let addUser = (req, res) => {
 
 
 let editUser = (req, res) => {
-  res.send()
-}; 
+  req.user.update(req.body)
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch(err => {
+      res.status(400).send();
+    });
+};
 
 
 let deleteUser = (req, res) => {
-  res.send()
+  req.user.remove()
+  .then(() => {
+    res.status(200).send();
+  })
+  .catch(err => {
+    res.status(400).send();
+  });
 };
 
 
