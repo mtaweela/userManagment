@@ -12,7 +12,7 @@ router
         limits: { fileSize: 300 * 1024 },
         abortOnLimit:true
     }))
-    .post("/", fileController.upload);
+    .post("/", authenticate,fileController.upload);
 
 
 module.exports = router;
