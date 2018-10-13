@@ -6,6 +6,7 @@ var bodyParser = require("body-parser");
 var app = express();
 
 const port = process.env.PORT;
+var mainRouter = require("./routes/main.route");
 
 app
   .use(function(request, response, next) { // configuration of headers
@@ -15,7 +16,7 @@ app
     next();
   })
   .use(bodyParser.json())
-  .use("/api", () => {console.log("hi")})
+  .use("/api", mainRouter)
   .listen(port, () => {
     console.log(`started on port ${port}`);
   });
