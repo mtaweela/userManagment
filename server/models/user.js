@@ -26,15 +26,18 @@ let UserSchema = new mongoose.Schema({
         minlength: 6
     },
     firstName: {
+        type: String,
         require: true,
         minlength: 1
     },
     lastName: {
+        type: String, 
         require: true,
         minlength: 1
     },
     avatar: {
-
+        type: String,
+        minlength: 1
     },
     tokens: [{
         access: {
