@@ -1,3 +1,5 @@
+var _ = require("lodash");
+
 var { User } = require("./../models/user");
 
 
@@ -7,7 +9,20 @@ let getMe = (req, res) => {
 
 
 let addUser = (req, res) => {
-  res.send()
+  var body = _.pick(req.body, ["username", "email", "password", "firstName", "lastName", "avatar"]);
+  var user = new User(body);
+
+  user
+    .save()
+    .then(() => {
+      return user.generateAuthToken();
+    })
+    .then(token => {
+      res.header("x-auth", token).send(user);
+    })
+    .catch(err => {
+      res.status(400).send(err);
+    });
 };
 
 
