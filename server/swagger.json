@@ -1,0 +1,310 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Hello World App"
+  },
+  "basePath": "/api",
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/users": {
+      "post": {
+        "description": "Creats new user and return back the athentication token in the header of the response under name (x-auth)",
+        "operationId": "addUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "description": "The user to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userSchema"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success and you could find the authentication token inside the response header under name x-auth"
+          },
+          "400": {
+            "description": "Bad request. make sure all parameters recuired are fullfilled"
+          },
+          "5XX": {
+            "description": "Unexpected error."
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "description": "Log in the user and return back the athentication token in the header of the response under name (x-auth)",
+        "operationId": "login",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "description": "The user credintials for log in.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/loginSchema"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success and you could find the authentication token inside the response header under name x-auth"
+          },
+          "400": {
+            "description": "Bad request. make sure all parameters recuired are fullfilled"
+          },
+          "5XX": {
+            "description": "Unexpected error."
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "description": "Get the information of the logged in user",
+        "operationId": "getMe",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-auth",
+            "description": "Authentication token to make sure the user is autherized to access the data",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "required": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success and you could find the user data in the body of the response"
+          },
+          "400": {
+            "description": "Bad request. make sure all parameters recuired are fullfilled"
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "5XX": {
+            "description": "Unexpected error."
+          }
+        }
+      },
+      "put": {
+        "description": "Edit the information of the logged in user",
+        "operationId": "editUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "description": "The data to edit in the user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/editUserSchema"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-auth",
+            "description": "Authentication token to make sure the user is autherized to edit the data",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "required": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request. make sure all parameters recuired are fullfilled"
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "5XX": {
+            "description": "Unexpected error."
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete the information of the logged in user",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-auth",
+            "description": "Authentication token to make sure the user is autherized to delete the data",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "required": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success and user deleted"
+          },
+          "400": {
+            "description": "Bad request. make sure all parameters recuired are fullfilled"
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "5XX": {
+            "description": "Unexpected error."
+          }
+        }
+      }
+    },
+    "/users/me/token": {
+      "delete": {
+        "description": "Delete the authentication token from the database that means this auth token is not valid for usage any more (logout)",
+        "operationId": "logout",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-auth",
+            "description": "Authentication token to make sure the user is autherized to delete the token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "required": true
+            }
+          }
+        ],
+        "responses": {
+			"200": {
+				"description": "Success and auth token deleted"
+			  },
+			  "400": {
+				"description": "Bad request. make sure all parameters recuired are fullfilled"
+			  },
+			  "401": {
+				"description": "Authorization information is missing or invalid."
+			  },
+			  "5XX": {
+				"description": "Unexpected error."
+			  }
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "description": "Upload image to the server (accepts only png, jpg formats)",
+        "operationId": "upload",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "sampleFile",
+            "type": "file",
+            "description": "The file to upload."
+          },
+          {
+            "in": "header",
+            "name": "x-auth",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "required": true
+            }
+          }
+        ],
+        "responses": {
+			"200": {
+				"description": "Success and the image has been uploaded to the server successfully"
+			  },
+			  "400": {
+				"description": "Bad request. make sure all parameters recuired are fullfilled"
+			  },
+			  "401": {
+				"description": "Authorization information is missing or invalid."
+			  },
+			  "415": {
+				"description": "Unsupported Media Type (the supported are png, jpg, jpeg formats only)"
+			  },
+			  "5XX": {
+				"description": "Unexpected error."
+			  }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "userSchema": {
+      "type": "object",
+      "required": ["email", "username", "firstName", "lastName", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "username": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      }
+    },
+    "loginSchema": {
+      "type": "object",
+      "required": ["email", "username", "firstName", "lastName", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "editUserSchema": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "username": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
