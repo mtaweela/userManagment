@@ -13,8 +13,8 @@ const users = [
         email: 'mm@gmail.com',
         password: 'userOnePass',
         username: "user1",
-        firstName: "mohamed",
-        lastName: "taweela",
+        firstName: "mohamed1",
+        lastName: "taweela1",
         avatar: "/hello.png",
         tokens: [{
             access: 'auth',
@@ -26,8 +26,8 @@ const users = [
         email: 'nn@gmail.com',
         password: 'userTwoPass',
         username: "user2",
-        firstName: "mohamed",
-        lastName: "taweela",
+        firstName: "mohamed2",
+        lastName: "taweela2",
         avatar: "/hello.png",
         tokens: [{
             access: 'auth',

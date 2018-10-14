@@ -8,7 +8,7 @@ const { users, populateUsers } = require("./seed/seed");
 
 beforeEach(populateUsers);
 
-describe("GET /users/me", () => {
+describe("GET /api/users/me", () => {
   it("should return user if authenticated", done => {
     request(app)
       .get("/api/users/me")
@@ -32,7 +32,7 @@ describe("GET /users/me", () => {
   });
 });
 
-describe("POST /users", () => {
+describe("POST /api/users", () => {
   it("should create a user", done => {
     let email = "one@gmail.com";
     let password = "1234qwer";
@@ -87,7 +87,7 @@ describe("POST /users", () => {
   });
 });
 
-describe("POST /users/login", () => {
+describe("POST /api/users/login", () => {
   it("should login user and return auth token", done => {
     request(app)
       .post("/api/users/login")
@@ -140,7 +140,39 @@ describe("POST /users/login", () => {
   });
 });
 
-describe('DELETE /users/me/token', () => {
+describe('PUT /api/users/me', () => {
+  it('should edit user data', done => {
+    request(app)
+      .put('/api/users/me')
+      .send({
+        email: "newmail@gmail.com"
+      })
+      .set('x-auth', users[1].tokens[0].token)
+      .expect(200)
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        User.findById(users[1]._id).then(user => {
+          expect(user.email).toBe("newmail@gmail.com");
+          done();
+        }).catch(err => done(err));
+      });
+  });
+
+  it("should return 401 if not authenticated", done => {
+    request(app)
+      .put("/api/users/me")
+      .expect(401)
+      .expect(res => {
+        expect(res.body).toEqual({});
+      })
+      .end(done);
+  });
+});
+
+describe('DELETE /api/users/me/token', () => {
   it('should remove auth token on log out', done => {
     request(app)
       .delete('/api/users/me/token')
@@ -156,5 +188,34 @@ describe('DELETE /users/me/token', () => {
           done();
         }).catch(err => done(err));
       });
+  });
+});
+
+describe('Delete /api/users/me', () => {
+  it('should remove user from the database', done => {
+    request(app)
+      .delete('/api/users/me')
+      .set('x-auth', users[1].tokens[0].token)
+      .expect(200)
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        User.findById(users[1]._id).then(user => {
+          expect(user).toBe(null);
+          done();
+        }).catch(err => done(err));
+      });
+  });
+
+  it("should return 401 if not authenticated", done => {
+    request(app)
+      .delete("/api/users/me")
+      .expect(401)
+      .expect(res => {
+        expect(res.body).toEqual({});
+      })
+      .end(done);
   });
 });
